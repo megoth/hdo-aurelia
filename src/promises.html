@@ -1,0 +1,46 @@
+<template>
+  <section>
+    <h2>${heading}</h2>
+    <nav>
+      <ul class="pagination">
+        <li if.bind="links.prev && currentPage !== 2">
+          <a href="#/promises?page=1" click.trigger="navigateToPage(1)" aria-label="First page">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li if.bind="links.prev">
+          <a href="#/promises?page=${currentPage}" click.trigger="navigateToPage(currentPage-1)" aria-label="Previous">
+            <span aria-hidden="true">&lsaquo;</span>
+          </a>
+        </li>
+        <li repeat.for="page of pages" class.bind="currentPage === page ? 'active' : ''">
+          <a href="#/promises?page=${currentPage}" click.trigger="navigateToPage(page)" aria-label="Page ${page}">
+            <span aria-hidden="true">${page}</span>
+          </a>
+        </li>
+        <li if.bind="links.next">
+          <a href="#/promises?page=${currentPage}" click.trigger="navigateToPage(currentPage+1)" aria-label="Next">
+            <span aria-hidden="true">&rsaquo;</span>
+          </a>
+        </li>
+        <li if.bind="links.next && currentPage !== totalPages - 1">
+          <a href="#/promises?page=${totalPages}" click.trigger="navigateToPage(totalPages)" aria-label="Last page">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Body</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr repeat.for="promise of promises">
+          <td>${promise.body}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</template>
