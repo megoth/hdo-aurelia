@@ -26,24 +26,24 @@ export class Promises {
 
   activate(params, routeConfig) {
     this.currentPage = parseInt(params.page, 10) || 1;
-    return this.navigate({ page: this.currentPage });
-  }
-
-  navigate(queries: PromisesQueries) {
-    queries = _.extend({
-      page: 1
-    }, queries || {});
-    return this.api.fetch('promises', {}, queries)
-      .then(update.bind(this, queries));
+    return navigate.call(this, { page: this.currentPage });
   }
 
   navigateToPage(page: number) {
-    this.navigate({ page: page });
+    navigate.call(this, { page: page });
     return true;
   }
 }
 
-function update(queries: PromiseQueries, response) {
+function navigate(queries: PromisesQueries) {
+  queries = _.extend({
+    page: 1
+  }, queries || {});
+  return this.api.fetch('promises', {}, queries)
+    .then(updateTable.bind(this, queries));
+}
+
+function updateTable(queries: PromiseQueries, response) {
   this.currentPage = queries.page;
   this.links = response._links;
   this.promises = response._embedded.promises;
