@@ -26,26 +26,25 @@ export class Promises {
 
   activate(params, routeConfig) {
     this.currentPage = parseInt(params.page, 10) || 1;
-    return this.navigate({ page: this.currentPage })
-      .then(update.bind(this, this.currentPage));
+    return this.navigate({ page: this.currentPage });
   }
 
   navigate(queries: PromisesQueries) {
     queries = _.extend({
       page: 1
     }, queries || {});
-    return this.api.fetch('promises', {}, queries);
+    return this.api.fetch('promises', {}, queries)
+      .then(update.bind(this, queries));
   }
 
   navigateToPage(page: number) {
-    this.navigate({ page: page })
-      .then(update.bind(this, page));
+    this.navigate({ page: page });
     return true;
   }
 }
 
-function update(page, response) {
-  this.currentPage = page;
+function update(queries: PromiseQueries, response) {
+  this.currentPage = queries.page;
   this.links = response._links;
   this.promises = response._embedded.promises;
   this.totalPages = Math.ceil(response.total / this.pageSize);
