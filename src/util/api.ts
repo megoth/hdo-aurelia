@@ -1,5 +1,5 @@
 import {HttpClient} from 'aurelia-fetch-client';
-import {Promise} from 'bluebird';
+import Promise from './promise';
 
 export class Api {
   links: Object;

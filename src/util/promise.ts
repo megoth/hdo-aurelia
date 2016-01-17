@@ -1,5 +1,3 @@
-import bluebird from 'bluebird';
+import Promise from 'bluebird';
 
-console.log(bluebird);
-
-export bluebird;
+export default Promise;
