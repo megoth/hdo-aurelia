@@ -36,6 +36,7 @@ System.config({
   },
 
   map: {
+    "Wisembly/basil.js": "github:Wisembly/basil.js@0.4.3",
     "app": "src",
     "aurelia-animator-css": "npm:aurelia-animator-css@1.0.0-beta.1.0.3",
     "aurelia-bootstrapper": "npm:aurelia-bootstrapper@1.0.0-beta.1.0.2",
@@ -50,6 +51,8 @@ System.config({
     "aurelia-templating-router": "npm:aurelia-templating-router@1.0.0-beta.1.0.5",
     "babel": "npm:babel-core@5.8.34",
     "babel-runtime": "npm:babel-runtime@5.8.34",
+    "basil.js": "npm:basil.js@0.4.3",
+    "bluebird": "npm:bluebird@3.1.1",
     "bootstrap": "github:twbs/bootstrap@3.3.6",
     "core-js": "npm:core-js@1.2.6",
     "fetch": "github:github/fetch@0.10.1",
@@ -210,6 +213,9 @@ System.config({
       "core-js": "npm:core-js@1.2.6"
     },
     "npm:babel-runtime@5.8.34": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:bluebird@3.1.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:core-js@1.2.6": {

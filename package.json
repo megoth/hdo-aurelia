@@ -2,13 +2,7 @@
   "name": "hdo-admin",
   "version": "0.0.1",
   "description": "A new take on the administration interface of Holder de ord",
-  "keywords": [
-    "aurelia",
-    "Holder de ord"
-    "politics",
-    "open data",
-    "Norway"
-  ],
+  "keywords": [],
   "homepage": "https://www.holderdeord.no/",
   "license": "MIT",
   "author": "Arne Hassel <arne.hassel@gmail.com> (http://icanhasweb.net)",
@@ -31,6 +25,8 @@
       "aurelia-templating-binding": "npm:aurelia-templating-binding@^1.0.0-beta.1",
       "aurelia-templating-resources": "npm:aurelia-templating-resources@^1.0.0-beta.1.0.1",
       "aurelia-templating-router": "npm:aurelia-templating-router@^1.0.0-beta.1.0.1",
+      "basil.js": "npm:basil.js@^0.4.3",
+      "bluebird": "npm:bluebird@^3.1.1",
       "bootstrap": "github:twbs/bootstrap@^3.3.5",
       "core-js": "npm:core-js@^1.2.6",
       "fetch": "github:github/fetch@^0.10.1",

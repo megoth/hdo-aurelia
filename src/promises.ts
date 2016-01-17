@@ -2,23 +2,21 @@ import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import 'fetch';
 import {Router} from 'aurelia-router';
+import {Api} from './util/api';
 
 @autoinject
 export class Promises {
+  api: Api;
+  currentPage: number = 1;
   heading: string = 'Promises';
-  promises: any[] = [];
+  links: Object;
   pages: number[] = [1];
   pageSize: number = 10;
+  promises: any[] = [];
   totalPages: number = 1;
-  currentPage: number = 1;
-  links: Object;
 
   constructor(private http: HttpClient) {
-    http.configure(config => {
-      config
-        .useStandardConfiguration()
-        .withBaseUrl('https://www.holderdeord.no/api/');
-    });
+    this.api = new Api(http);
   }
 
   activate(params, routeConfig) {
@@ -27,8 +25,7 @@ export class Promises {
   }
 
   navigate(url: string) {
-    return this.http.fetch(url)
-      .then(response => response.json())
+    return this.api.fetch('promises')
       .then(response => {
         this.links = response._links;
         this.promises = response._embedded.promises;
@@ -39,6 +36,7 @@ export class Promises {
         for (let i = firstPage; i <= lastPage; i++) {
           this.pages.push(i);
         }
+        return response;
       });
   }
 
