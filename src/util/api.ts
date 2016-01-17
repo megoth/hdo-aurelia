@@ -10,11 +10,13 @@ export class Api {
     http.configure(config => config.useStandardConfiguration());
   }
 
-  fetch(endpoint: string) {
+  fetch(endpoint: string, data: Object, queries: Object) {
     let paths = endpoint ? endpoint.split(':') : [];
     return (paths.length === 0 ?
-        this.http.fetch('https://www.holderdeord.no/api') :
-        (path => this.findLinks(paths, path).then(links => this.http.fetch(links[path].href)))(paths.pop())
+        this.http.fetch(constructUrl('https://www.holderdeord.no/api', data, queries)) :
+        (path => this.findLinks(paths)
+          .then(links => this.http.fetch(constructUrl(links[path].href, data, queries)))
+        )(paths.pop())
       )
       .then(response => response.json())
       .then(response => {
@@ -25,14 +27,14 @@ export class Api {
       });
   }
 
-  findLinks(paths: string[], path: string) {
+  findLinks(paths: string[]) {
     let apiPath = ['root'].concat(paths).join(':');
     if (this.links[apiPath]) {
       return new Promise(resolve => resolve(this.links[apiPath]));
     }
     return (paths.length === 0 ?
         this.http.fetch('https://www.holderdeord.no/api') :
-        (path => this.findLinks(paths, path).then(links => this.http.fetch(links[path].href)))(paths.pop())
+        (path => this.findLinks(paths).then(links => this.http.fetch(links[path].href)))(paths.pop())
       )
       .then(response => response.json())
       .then(response => {
@@ -42,3 +44,10 @@ export class Api {
   }
 }
 
+function constructUrl(baseUrl, data, queries) {
+  let query = _.reduce(queries || {}, (memo, value, key) => {
+    memo.push(`${key}=${value}`);
+    return memo;
+  }, []).join('&');
+  return `${baseUrl}?${query}`;
+}
