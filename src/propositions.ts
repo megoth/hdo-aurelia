@@ -1,17 +1,11 @@
 import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
-import 'fetch';
-import {Router} from 'aurelia-router';
-import {RestApi} from './util/restApi';
+import {PropositionsApi, PropositionsQuery, PropositionsResponse} from './api/propositions-api';
 import _ from 'lodash';
-
-interface PropositionsQueries {
-  page?: number;
-}
 
 @autoinject
 export class Propositions {
-  api: RestApi;
+  api: PropositionsApi;
   currentPage: number = 1;
   heading: string = 'Propositions';
   links: Object;
@@ -21,7 +15,7 @@ export class Propositions {
   totalPages: number = 1;
 
   constructor(private http: HttpClient) {
-    this.api = new RestApi(http, 'https://www.holderdeord.no/api');
+    this.api = new PropositionsApi(http);
   }
 
   activate(params, routeConfig) {
@@ -35,19 +29,19 @@ export class Propositions {
   }
 }
 
-function navigate(queries: PropositionsQueries) {
-  queries = _.extend({
+function navigate(query: PropositionsQuery) {
+  query = _.extend({
     page: 1
-  }, queries || {});
-  return this.api.fetch('propositions', {}, queries)
-    .then(updateTable.bind(this, queries));
+  }, query || {});
+  return this.api.fetch('propositions', {}, query)
+    .then(updateTable.bind(this, query));
 }
 
-function updateTable(queries: PropositionsQueries, response) {
-  this.currentPage = queries.page;
+function updateTable(query: PropositionsQuery, response: PropositionsResponse) {
+  this.currentPage = query.page;
   this.links = response._links;
   this.propositions = response._embedded.propositions;
-  this.totalPages = Math.ceil(response.total / this.pageSize);
+  this.totalPages = response.total_pages;
   let firstPage = Math.max(this.currentPage - 2, 1);
   let lastPage = Math.min(this.currentPage + 2, this.totalPages);
   this.pages = [];

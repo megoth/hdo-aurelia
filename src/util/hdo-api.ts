@@ -1,6 +1,6 @@
 import {HttpClient} from 'aurelia-fetch-client';
-import Promise from './promise';
 import _ from 'lodash';
+import 'fetch';
 
 export class HdoApi {
   baseUri: String;

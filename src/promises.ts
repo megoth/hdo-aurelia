@@ -1,26 +1,10 @@
 import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
-import 'fetch';
-import {Router} from 'aurelia-router';
-import {HdoApi} from './util/hdoApi';
-import _ from 'lodash';
-
-interface PromisesQueries {
-  page?: number;
-}
-
-interface PromisesResponse {
-  navigators: Object;
-  results: Object[];
-  next_url?: String;
-  previous_url?: String;
-  current_page: Number;
-  total_pages: Number;
-}
+import {PromisesApi, PromisesQuery, PromisesResponse} from './api/promises-api';
 
 @autoinject
 export class Promises {
-  api: HdoApi;
+  api: PromisesApi;
   currentPage: number = 1;
   heading: string = 'Promises';
   nextUrl: string;
@@ -29,7 +13,7 @@ export class Promises {
   totalPages: number = 1;
 
   constructor(private http: HttpClient) {
-    this.api = new HdoApi(http, 'https://www.holderdeord.no/promises.json');
+    this.api = new PromisesApi(http);
   }
 
   activate(params, routeConfig) {
@@ -43,7 +27,7 @@ export class Promises {
   }
 }
 
-function navigate(queries: PromisesQueries) {
+function navigate(queries: PromisesQuery) {
   queries = _.extend({
     page: 1
   }, queries || {});
