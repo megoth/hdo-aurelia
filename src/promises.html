@@ -3,12 +3,12 @@
     <h2>${heading}</h2>
     <nav>
       <ul class="pagination">
-        <li if.bind="links.prev && currentPage !== 2">
+        <li if.bind="prevUrl && currentPage !== 2">
           <a href="#/promises?page=1" click.trigger="navigateToPage(1)" aria-label="First page">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
-        <li if.bind="links.prev">
+        <li if.bind="prevUrl">
           <a href="#/promises?page=${currentPage-1}" click.trigger="navigateToPage(currentPage-1)" aria-label="Previous">
             <span aria-hidden="true">&lsaquo;</span>
           </a>
@@ -18,12 +18,12 @@
             <span aria-hidden="true">${page}</span>
           </a>
         </li>
-        <li if.bind="links.next">
+        <li if.bind="nextUrl">
           <a href="#/promises?page=${currentPage+1}" click.trigger="navigateToPage(currentPage+1)" aria-label="Next">
             <span aria-hidden="true">&rsaquo;</span>
           </a>
         </li>
-        <li if.bind="links.next && currentPage !== totalPages - 1">
+        <li if.bind="nextUrl && currentPage !== totalPages - 1">
           <a href="#/promises?page=${totalPages}" click.trigger="navigateToPage(totalPages)" aria-label="Last page">
             <span aria-hidden="true">&raquo;</span>
           </a>

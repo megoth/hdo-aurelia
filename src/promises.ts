@@ -2,26 +2,34 @@ import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import 'fetch';
 import {Router} from 'aurelia-router';
-import {RestApi} from './util/restApi';
+import {HdoApi} from './util/hdoApi';
 import _ from 'lodash';
 
 interface PromisesQueries {
   page?: number;
 }
 
+interface PromisesResponse {
+  navigators: Object;
+  results: Object[];
+  next_url?: String;
+  previous_url?: String;
+  current_page: Number;
+  total_pages: Number;
+}
+
 @autoinject
 export class Promises {
-  api: RestApi;
+  api: HdoApi;
   currentPage: number = 1;
   heading: string = 'Promises';
-  links: Object;
+  nextUrl: string;
   pages: number[] = [1];
-  pageSize: number = 10;
-  promises: any[] = [];
+  prevUrl: string;
   totalPages: number = 1;
 
   constructor(private http: HttpClient) {
-    this.api = new RestApi(http, 'https://www.holderdeord.no/api');
+    this.api = new HdoApi(http, 'https://www.holderdeord.no/promises.json');
   }
 
   activate(params, routeConfig) {
@@ -39,17 +47,18 @@ function navigate(queries: PromisesQueries) {
   queries = _.extend({
     page: 1
   }, queries || {});
-  return this.api.fetch('promises', {}, queries)
-  .then(updateTable.bind(this, queries));
+  return this.api.fetch(queries)
+    .then(response => updateTable.call(this, response));
 }
 
-function updateTable(queries: PromiseQueries, response) {
-  this.currentPage = queries.page;
-  this.links = response._links;
-  this.promises = response._embedded.promises;
-  this.totalPages = Math.ceil(response.total / this.pageSize);
-  let firstPage = Math.max(this.currentPage - 2, 1);
-  let lastPage = Math.min(this.currentPage + 2, this.totalPages);
+function updateTable(response: PromisesResponse) {
+  this.promises = response.results;
+  this.currentPage = response.current_page;
+  this.nextUrl = response.next_url;
+  this.prevUrl = response.previous_url;
+  this.totalPages = response.total_pages;
+  const firstPage = Math.max(this.currentPage - 2, 1);
+  const lastPage = Math.min(this.currentPage + 2, this.totalPages);
   this.pages = [];
   for (let i = firstPage; i <= lastPage; i++) {
     this.pages.push(i);
