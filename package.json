@@ -5,8 +5,8 @@
   "keywords": [],
   "homepage": "https://www.holderdeord.no/",
   "license": {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/mit-license.php"
+    "type": "MIT",
+    "url": "http://www.opensource.org/licenses/mit-license.php"
   },
   "author": "Arne Hassel <arne.hassel@gmail.com> (http://icanhasweb.net)",
   "main": "src/main.js",
@@ -45,5 +45,6 @@
       "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.91",
       "typescript": "npm:typescript@^1.6.2"
     }
-  }
+  },
+  "dependencies": {}
 }

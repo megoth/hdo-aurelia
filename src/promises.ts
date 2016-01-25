@@ -2,7 +2,7 @@ import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import 'fetch';
 import {Router} from 'aurelia-router';
-import {Api} from './util/api';
+import {RestApi} from './util/restApi';
 import _ from 'lodash';
 
 interface PromisesQueries {
@@ -11,7 +11,7 @@ interface PromisesQueries {
 
 @autoinject
 export class Promises {
-  api: Api;
+  api: RestApi;
   currentPage: number = 1;
   heading: string = 'Promises';
   links: Object;
@@ -21,7 +21,7 @@ export class Promises {
   totalPages: number = 1;
 
   constructor(private http: HttpClient) {
-    this.api = new Api(http);
+    this.api = new RestApi(http, 'https://www.holderdeord.no/api');
   }
 
   activate(params, routeConfig) {
@@ -40,7 +40,7 @@ function navigate(queries: PromisesQueries) {
     page: 1
   }, queries || {});
   return this.api.fetch('promises', {}, queries)
-    .then(updateTable.bind(this, queries));
+  .then(updateTable.bind(this, queries));
 }
 
 function updateTable(queries: PromiseQueries, response) {

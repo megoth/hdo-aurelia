@@ -2,7 +2,7 @@ import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import 'fetch';
 import {Router} from 'aurelia-router';
-import {Api} from './util/api';
+import {RestApi} from './util/restApi';
 import _ from 'lodash';
 
 interface PropositionsQueries {
@@ -11,7 +11,7 @@ interface PropositionsQueries {
 
 @autoinject
 export class Propositions {
-  api: Api;
+  api: RestApi;
   currentPage: number = 1;
   heading: string = 'Propositions';
   links: Object;
@@ -21,7 +21,7 @@ export class Propositions {
   totalPages: number = 1;
 
   constructor(private http: HttpClient) {
-    this.api = new Api(http);
+    this.api = new RestApi(http, 'https://www.holderdeord.no/api');
   }
 
   activate(params, routeConfig) {
