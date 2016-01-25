@@ -4,7 +4,10 @@
   "description": "A new take on the administration interface of Holder de ord",
   "keywords": [],
   "homepage": "https://www.holderdeord.no/",
-  "license": "MIT",
+  "license": {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+  },
   "author": "Arne Hassel <arne.hassel@gmail.com> (http://icanhasweb.net)",
   "main": "src/main.js",
   "devDependencies": {
