@@ -34,7 +34,9 @@ export class Api {
     }
     return (paths.length === 0 ?
         this.http.fetch('https://www.holderdeord.no/api') :
-        (path => this.findLinks(paths).then(links => this.http.fetch(links[path].href)))(paths.pop())
+        (path => this.findLinks(paths)
+          .then(links => this.http.fetch(links[path].href))
+        )(paths.pop())
       )
       .then(response => response.json())
       .then(response => {

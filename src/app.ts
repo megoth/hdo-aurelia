@@ -6,7 +6,8 @@ export class App {
   configureRouter(config: RouterConfiguration, router: Router) {
     config.title = 'Holder de ord admin';
     config.map([
-      { route: ['','promises'], name: 'promises',      moduleId: './src/promises',      nav: true, title:'Promises' }
+      { route: ['','propositions'], name: 'propositions',      moduleId: './src/propositions',      nav: true, title:'Propositions' },
+      { route: ['promises'], name: 'promises',      moduleId: './src/promises',      nav: true, title:'Promises' }
     ]);
 
     this.router = router;
