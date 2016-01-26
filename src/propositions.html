@@ -3,12 +3,12 @@
     <h2>${heading}</h2>
     <nav>
       <ul class="pagination">
-        <li if.bind="links.prev && currentPage !== 2">
+        <li if.bind="prevUrl && currentPage !== 2">
           <a href="#/propositions?page=1" click.trigger="navigateToPage(1)" aria-label="First page">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
-        <li if.bind="links.prev">
+        <li if.bind="prevUrl">
           <a href="#/propositions?page=${currentPage-1}" click.trigger="navigateToPage(currentPage-1)" aria-label="Previous">
             <span aria-hidden="true">&lsaquo;</span>
           </a>
@@ -18,12 +18,12 @@
             <span aria-hidden="true">${page}</span>
           </a>
         </li>
-        <li if.bind="links.next">
+        <li if.bind="nextUrl">
           <a href="#/propositions?page=${currentPage+1}" click.trigger="navigateToPage(currentPage+1)" aria-label="Next">
             <span aria-hidden="true">&rsaquo;</span>
           </a>
         </li>
-        <li if.bind="links.next && currentPage !== totalPages - 1">
+        <li if.bind="nextUrl && currentPage !== totalPages - 1">
           <a href="#/propositions?page=${totalPages}" click.trigger="navigateToPage(totalPages)" aria-label="Last page">
             <span aria-hidden="true">&raquo;</span>
           </a>
@@ -33,14 +33,12 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Forslagstittel</th>
-          <th>Forslagstekst</th>
+          <th>Auto-tittel</th>
         </tr>
       </thead>
       <tbody>
         <tr repeat.for="proposition of propositions">
-          <td>${proposition.title}</td>
-          <td>${proposition.body}</td>
+          <td>${proposition.auto_title}</td>
         </tr>
       </tbody>
     </table>

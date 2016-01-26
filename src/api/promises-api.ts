@@ -6,7 +6,7 @@ export interface PromisesQuery {
 }
 
 export interface PromisesResponse {
-  navigators: Object;
+  navigators: Object[];
   results: Object[];
   next_url?: string;
   previous_url?: string;

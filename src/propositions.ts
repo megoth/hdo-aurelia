@@ -35,28 +35,30 @@ function navigate(api: PropositionsApi, query: PropositionsQuery) {
   query = _.extend({
     page: 1
   }, query || {});
-  return api.fetch('propositions', {}, query)
+  return api.fetch(query)
     .then(response => processData(query, response));
 }
 
-function processData(query: PropositionsQuery, response) {
-  const currentPage = query.page;
-  const links = response._links;
-  const propositions = response._embedded.propositions;
+function processData(query: PropositionsQuery, response: PropositionsResponse) {
+  const currentPage = response.current_page;
+  const propositions = response.results;
   const totalPages = response.total_pages;
   const firstPage = Math.max(currentPage - 2, 1);
   const lastPage = Math.min(currentPage + 2, totalPages);
+  const nextUrl = response.next_url;
+  const prevUrl = response.previous_url;
   let pages = [];
   for (let i = firstPage; i <= lastPage; i++) {
     pages.push(i);
   }
   return {
     currentPage,
-    links,
     propositions,
     totalPages,
     firstPage,
     lastPage,
+    nextUrl,
+    prevUrl,
     pages
   };
 }

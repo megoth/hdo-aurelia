@@ -1,4 +1,4 @@
-import {RestApi} from '../util/rest-api';
+import {HdoApi} from '../util/hdo-api';
 import {HttpClient} from 'aurelia-fetch-client';
 
 export interface PropositionsQuery {
@@ -6,21 +6,22 @@ export interface PropositionsQuery {
 }
 
 export interface PropositionsResponse {
-  _embedded: Object[];
-  _links: Object[];
-  count: Number;
-  total: Number;
-  total_pages: Number;
+    current_page: number;
+    navigators: Object[];
+    next_url: string;
+    previous_url: string;
+    results: Object[];
+    total_pages: number;
 }
 
 export class PropositionsApi {
-  api: RestApi;
+    api: HdoApi;
 
   constructor(private http: HttpClient) {
-    this.api = new RestApi(http, 'https://www.holderdeord.no/api');
+    this.api = new HdoApi(http, 'https://www.holderdeord.no/propositions.json');
   }
 
-  fetch(endpoint: string, data: Object, query: PropositionsQuery) {
-      return this.api.fetch(endpoint, data, query);
+  fetch(query: PropositionsQuery) {
+    return this.api.fetch(query);
   }
 }
