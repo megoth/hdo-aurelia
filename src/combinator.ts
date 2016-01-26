@@ -2,6 +2,13 @@ import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client'; 
 import {PromisesApi} from './api/promises-api';
 import {PropositionsApi} from './api/propositions-api';
+import {State as PromisesState} from './promises';
+import {State as PropositionsState} from './propositions';
+
+interface State {
+  promises: PromisesState;
+  propositions: PropositionsState;
+}
 
 @autoinject
 export class Combinator {

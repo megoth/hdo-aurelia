@@ -1,23 +1,23 @@
 import _ from 'lodash';
-import {constructStateUrl} from '../util/url';
 
-export interface PagerData {
+export interface IPager {
   currentPage: number;
   hasNext: boolean;
   hasPrevious: boolean;
   pages: number[];
   totalPages: number;
-  stateName: string;
+  getUrl: Function;
 }
 
-export class Pager {
-  stateName: string;
-  
-  activate(model: PagerData) {
-    _.extend(this, model);
-  }
+export class Pager implements IPager {
+  currentPage: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+  pages: number[];
+  totalPages: number;
+  getUrl: Function;
 
-  getUrl(query: Object) {
-    return constructStateUrl(this.stateName, query);
+  activate(model: IPager) {
+    _.extend(this, model);
   }
 }

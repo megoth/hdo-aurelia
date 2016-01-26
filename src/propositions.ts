@@ -1,18 +1,19 @@
 import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import {PropositionsApi, PropositionsQuery, PropositionsResponse} from './api/propositions-api';
-import {PagerData} from '../widgets/pager';
+import {IPager} from './widgets/pager';
 import _ from 'lodash';
+import {constructStateUrl} from './util/url';
 
 interface State {
-    pager: PagerData;
+    pager: IPager;
     propositions: Object[];
 }
 
 @autoinject
 export class Propositions {
     api: PropositionsApi;
-    pager: PagerData;
+    pager: IPager;
     heading: string = 'Propositions';
     propositions: Object[] = [];
 
@@ -58,7 +59,11 @@ function generateState(response: PropositionsResponse, stateName: string): State
             hasPrevious: !!response.previous_url,
             totalPages,
             pages,
-            stateName: stateName
+            getUrl: getUrl
         }
     };
+}
+
+function getUrl(query: Object) {
+    return constructStateUrl('propositions', query);
 }
