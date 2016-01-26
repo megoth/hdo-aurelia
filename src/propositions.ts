@@ -20,33 +20,43 @@ export class Propositions {
 
   activate(params, routeConfig) {
     this.currentPage = parseInt(params.page, 10) || 1;
-    return navigate.call(this, { page: this.currentPage });
+    return navigate(this.api, { page: this.currentPage })
+    .then(state => _.extend(this, state));
   }
 
   navigateToPage(page: number) {
-    navigate.call(this, { page: page });
+    navigate(this.api, { page: page })
+    .then(state => _.extend(this, state));
     return true;
   }
 }
 
-function navigate(query: PropositionsQuery) {
+function navigate(api: PropositionsApi, query: PropositionsQuery) {
   query = _.extend({
     page: 1
   }, query || {});
-  return this.api.fetch('propositions', {}, query)
-    .then(updateTable.bind(this, query));
+  return api.fetch('propositions', {}, query)
+    .then(response => processData(query, response));
 }
 
-function updateTable(query: PropositionsQuery, response: PropositionsResponse) {
-  this.currentPage = query.page;
-  this.links = response._links;
-  this.propositions = response._embedded.propositions;
-  this.totalPages = response.total_pages;
-  let firstPage = Math.max(this.currentPage - 2, 1);
-  let lastPage = Math.min(this.currentPage + 2, this.totalPages);
-  this.pages = [];
+function processData(query: PropositionsQuery, response) {
+  const currentPage = query.page;
+  const links = response._links;
+  const propositions = response._embedded.propositions;
+  const totalPages = response.total_pages;
+  const firstPage = Math.max(currentPage - 2, 1);
+  const lastPage = Math.min(currentPage + 2, totalPages);
+  let pages = [];
   for (let i = firstPage; i <= lastPage; i++) {
-    this.pages.push(i);
+    pages.push(i);
   }
-  return response;
+  return {
+    currentPage,
+    links,
+    propositions,
+    totalPages,
+    firstPage,
+    lastPage,
+    pages
+  };
 }

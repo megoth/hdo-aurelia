@@ -1,5 +1,4 @@
 import {HttpClient} from 'aurelia-fetch-client';
-import Promise from './promise';
 import 'fetch';
 
 export class RestApi {

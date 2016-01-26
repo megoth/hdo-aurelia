@@ -17,10 +17,10 @@ export class PropositionsApi {
   api: RestApi;
 
   constructor(private http: HttpClient) {
-    this.api = new RestApi(http, 'https://www.holderdeord.no/promises.json');
+    this.api = new RestApi(http, 'https://www.holderdeord.no/api');
   }
 
   fetch(endpoint: string, data: Object, query: PropositionsQuery) {
-    return this.api.fetch(endpoint, data, query);
+      return this.api.fetch(endpoint, data, query);
   }
 }

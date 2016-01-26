@@ -1,6 +1,7 @@
 import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import {PromisesApi, PromisesQuery, PromisesResponse} from './api/promises-api';
+import _ from 'lodash';
 
 @autoinject
 export class Promises {
@@ -18,34 +19,45 @@ export class Promises {
 
   activate(params, routeConfig) {
     this.currentPage = parseInt(params.page, 10) || 1;
-    return navigate.call(this, { page: this.currentPage });
+    return navigate(this.api, { page: this.currentPage })
+    .then(state => _.extend(this, state));
   }
 
   navigateToPage(page: number) {
-    navigate.call(this, { page: page });
+    navigate(this.api, { page: page })
+    .then(state => _.extend(this, state));
     return true;
   }
 }
 
-function navigate(queries: PromisesQuery) {
+function navigate(api: PromisesApi, queries: PromisesQuery) {
   queries = _.extend({
     page: 1
   }, queries || {});
-  return this.api.fetch(queries)
-    .then(response => updateTable.call(this, response));
+  return api.fetch(queries)
+  .then(response => updateTable(response));
 }
 
 function updateTable(response: PromisesResponse) {
-  this.promises = response.results;
-  this.currentPage = response.current_page;
-  this.nextUrl = response.next_url;
-  this.prevUrl = response.previous_url;
-  this.totalPages = response.total_pages;
-  const firstPage = Math.max(this.currentPage - 2, 1);
-  const lastPage = Math.min(this.currentPage + 2, this.totalPages);
-  this.pages = [];
+  const promises = response.results;
+  const currentPage = response.current_page;
+  const nextUrl = response.next_url;
+  const prevUrl = response.previous_url;
+  const totalPages = response.total_pages;
+  const firstPage = Math.max(currentPage - 2, 1);
+  const lastPage = Math.min(currentPage + 2, totalPages);
+  let pages = [];
   for (let i = firstPage; i <= lastPage; i++) {
-    this.pages.push(i);
+    pages.push(i);
   }
-  return response;
+  return {
+    promises,
+    currentPage,
+    nextUrl,
+    prevUrl,
+    totalPages,
+    firstPage,
+    lastPage,
+    pages
+  };
 }

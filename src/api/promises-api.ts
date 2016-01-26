@@ -8,10 +8,10 @@ export interface PromisesQuery {
 export interface PromisesResponse {
   navigators: Object;
   results: Object[];
-  next_url?: String;
-  previous_url?: String;
-  current_page: Number;
-  total_pages: Number;
+  next_url?: string;
+  previous_url?: string;
+  current_page: number;
+  total_pages: number;
 }
 
 export class PromisesApi {
