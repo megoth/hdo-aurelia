@@ -1,35 +1,9 @@
 <template>
   <section>
     <h2>${heading}</h2>
-    <nav>
-      <ul class="pagination">
-        <li if.bind="prevUrl && currentPage !== 2">
-          <a href="#/propositions?page=1" click.trigger="navigateToPage(1)" aria-label="First page">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li if.bind="prevUrl">
-          <a href="#/propositions?page=${currentPage-1}" click.trigger="navigateToPage(currentPage-1)" aria-label="Previous">
-            <span aria-hidden="true">&lsaquo;</span>
-          </a>
-        </li>
-        <li repeat.for="page of pages" class.bind="currentPage === page ? 'active' : ''">
-          <a href="#/propositions?page=${page}" click.trigger="navigateToPage(page)" aria-label="Page ${page}">
-            <span aria-hidden="true">${page}</span>
-          </a>
-        </li>
-        <li if.bind="nextUrl">
-          <a href="#/propositions?page=${currentPage+1}" click.trigger="navigateToPage(currentPage+1)" aria-label="Next">
-            <span aria-hidden="true">&rsaquo;</span>
-          </a>
-        </li>
-        <li if.bind="nextUrl && currentPage !== totalPages - 1">
-          <a href="#/propositions?page=${totalPages}" click.trigger="navigateToPage(totalPages)" aria-label="Last page">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <compose 
+      model.bind="pager"
+      view-model="./widgets/pager"></compose>
     <table class="table table-striped">
       <thead>
         <tr>

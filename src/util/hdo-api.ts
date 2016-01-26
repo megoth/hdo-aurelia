@@ -1,25 +1,15 @@
 import {HttpClient} from 'aurelia-fetch-client';
 import _ from 'lodash';
 import 'fetch';
+import {constructUrl} from './url';
 
 export class HdoApi {
-  baseUri: String;
-
-  constructor(private http: HttpClient, baseUri: String) {
+  constructor(private http: HttpClient, private baseUrl: String) {
     http.configure(config => config.useStandardConfiguration());
-    this.baseUri = baseUri;
   }
 
-  fetch(queries: Object) {
-    return this.http.fetch(constructUri(this.baseUri, queries))
+  fetch(queries: Object) : Promise {
+    return this.http.fetch(constructUrl(this.baseUrl, queries))
     .then(response => response.json());
   }
-}
-
-function constructUri(baseUri: String, queries: Object) {
-  let query = _.reduce(queries || {}, (memo, value, key) => {
-    memo.push(`${key}=${value}`);
-    return memo;
-  }, []).join('&');
-  return `${baseUri}?${query}`;
 }

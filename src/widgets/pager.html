@@ -1,0 +1,31 @@
+<template>
+  <nav>
+    <ul class="pagination">
+      <li if.bind="hasPrevious && currentPage !== 2">
+        <a href.bind="getUrl({page: 1})" click.trigger="navigateToPage(1)" aria-label="First page">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li if.bind="hasPrevious">
+        <a href.bind="getUrl({page: currentPage-1})" click.trigger="navigateToPage(currentPage-1)" aria-label="Previous">
+          <span aria-hidden="true">&lsaquo;</span>
+        </a>
+      </li>
+      <li repeat.for="page of pages" class.bind="currentPage === page ? 'active' : ''">
+        <a href.bind="getUrl({page: page})" click.trigger="navigateToPage(page)" aria-label="Page ${page}">
+          <span aria-hidden="true">${page}</span>
+        </a>
+      </li>
+      <li if.bind="hasNext">
+        <a href.bind="getUrl({page: currentPage+1})" click.trigger="navigateToPage(currentPage+1)" aria-label="Next">
+          <span aria-hidden="true">&rsaquo;</span>
+        </a>
+      </li>
+      <li if.bind="hasNext && currentPage !== totalPages - 1">
+        <a href.bind="getUrl({page: totalPages})" click.trigger="navigateToPage(totalPages)" aria-label="Last page">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</template>

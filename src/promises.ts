@@ -1,48 +1,47 @@
-import {autoinject} from 'aurelia-framework';
+import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import {PromisesApi, PromisesQuery, PromisesResponse} from './api/promises-api';
 import _ from 'lodash';
+import {PagerData} from './widgets/pager';
 
-@autoinject
+interface State {
+    pager: PagerData;
+    promises: Object[]
+}
+
+@inject(HttpClient)
 export class Promises {
   api: PromisesApi;
-  currentPage: number = 1;
   heading: string = 'Promises';
-  nextUrl: string;
-  pages: number[] = [1];
-  prevUrl: string;
-  totalPages: number = 1;
+  pager: PagerData;
 
   constructor(private http: HttpClient) {
     this.api = new PromisesApi(http);
   }
 
   activate(params, routeConfig) {
-    this.currentPage = parseInt(params.page, 10) || 1;
-    return navigate(this.api, { page: this.currentPage })
-    .then(state => _.extend(this, state));
+    const currentPage = parseInt(params.page, 10) || 1;
+    return navigate(this.api, 'promises', { page: currentPage })
+        .then(state => _.extend(this, state));
   }
 
   navigateToPage(page: number) {
-    navigate(this.api, { page: page })
+    navigate(this.api, 'promises', { page: page })
     .then(state => _.extend(this, state));
     return true;
   }
 }
 
-function navigate(api: PromisesApi, queries: PromisesQuery) {
+function navigate(api: PromisesApi, stateName: string, queries: PromisesQuery) {
   queries = _.extend({
     page: 1
   }, queries || {});
   return api.fetch(queries)
-  .then(response => updateTable(response));
+  .then(response => updateState(response, stateName));
 }
 
-function updateTable(response: PromisesResponse) {
-  const promises = response.results;
+function updateState(response: PromisesResponse, stateName: string) : State {
   const currentPage = response.current_page;
-  const nextUrl = response.next_url;
-  const prevUrl = response.previous_url;
   const totalPages = response.total_pages;
   const firstPage = Math.max(currentPage - 2, 1);
   const lastPage = Math.min(currentPage + 2, totalPages);
@@ -51,13 +50,14 @@ function updateTable(response: PromisesResponse) {
     pages.push(i);
   }
   return {
-    promises,
-    currentPage,
-    nextUrl,
-    prevUrl,
-    totalPages,
-    firstPage,
-    lastPage,
-    pages
+      promises: response.results,
+    pager: {
+      currentPage,
+      hasNext: !!response.next_url,
+      hasPrevious: !!response.previous_url,
+      totalPages,
+      pages,
+      stateName: stateName
+    }
   };
 }
