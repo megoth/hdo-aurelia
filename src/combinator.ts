@@ -2,45 +2,37 @@ import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client'; 
 import {PromisesApi} from './api/promises-api';
 import {PropositionsApi} from './api/propositions-api';
-// import {IState as IPromisesState, navigate as navigatePromises} from './promises';
-// import {IState as IPropositionsState} from './propositions';
+import {navigate as navigatePromises} from './promises';
 import _ from 'lodash';
-// import {constructStateUrl} from './util/url';
-
-// interface IState {
-//     promises: IPromisesState;
-//     propositions: IPropositionsState;
-// }
+import {constructLocalUrl} from './util/url';
 
 @autoinject
-export class Combinator implements IState {
-    heading: string = 'Combine promises and propositions';
+export class Combinator {
+    heading: string = 'Kombinér Løfter og Forslag';
     promisesApi: PromisesApi;
-    // promises: IPromisesState;
+    promises: Object;
     propositionsApi: PropositionsApi;
-    // propositions: IPropositionsState;
 
     constructor(private http: HttpClient) {
         this.promisesApi = new PromisesApi(http);
         this.propositionsApi = new PropositionsApi(http);
     }
 
-    activate() {
-        // navigatePromises(this.promisesApi)
-        // .then(promises => {
-        //     promises.pager.getUrl = getPromisesUrl;
-        //     this.promises = promises;
-        // });
-    }
-
-    navigateToPage(page: number) {
-        console.log(page);
-        return true;
+    activate(params, routeConfig) {
+        var promises = JSON.parse(params.promises);
+        return navigatePromises(this.promisesApi, getPromisesUrl, navigateToPromisesPage.bind(this), promises)
+        .then(promisesState => this.promises = promisesState);
     }
 }
 
 function getPromisesUrl(query: Object) {
-    return constructStateUrl('combinator', {
+    return constructLocalUrl('combinator', {
         promises: query
     });
+}
+
+function navigateToPromisesPage(page: number) {
+    navigatePromises(this.promisesApi, getPromisesUrl, navigateToPromisesPage.bind(this), { page: page })
+        .then(promisesState => this.promises = promisesState);
+    return true;
 }

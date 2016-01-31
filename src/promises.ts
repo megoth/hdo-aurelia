@@ -33,7 +33,8 @@ export class Promises {
     }
 }
 
-function navigate(api: PromisesApi, getUrlFn: Function, navigateToPageFn: Function, queries: PromisesQuery) {
+export function navigate(api: PromisesApi, getUrlFn: Function, navigateToPageFn: Function, queries: PromisesQuery) {
+    console.log(api);
     queries = _.extend({
         page: 1
     }, queries || {});

@@ -10,17 +10,17 @@ export function constructUrl(baseUrl: string, query: Object) {
     return `${baseUrl}?${flattenedQuery}`;
 }
 
-export function flattenQuery(query: Object): string {
+export function flattenQuery(query: Object, separator: string = '=', keyDelimiter: string = ''): string {
     return _.reduce(query || {}, (memo, value, key) => {
         const encodedKey = encodeURI(key);
         const encodedValue = processValue(value);
-        memo.push(`${encodedKey}=${encodedValue}`);
+        memo.push(`${keyDelimiter}${encodedKey}${keyDelimiter}${separator }${encodedValue }`);
         return memo;
     }, []).join('&');
 
     function processValue(value: any) {
         return _.isPlainObject(value) ? (() => {
-            const query = flattenQuery(value);
+            const query = flattenQuery(value, ':', '"');
             return `{${query}}`;
         })() : encodeURI(value);
     }
