@@ -2,11 +2,11 @@ import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import {PromisesApi, PromisesQuery, PromisesResponse} from './api/promises-api';
 import _ from 'lodash';
-import {IPager} from './widgets/pager';
-import {constructStateUrl} from './util/url';
+import {PagerModel} from './models/pagerModel';
+import {constructLocalUrl} from './util/url';
 
 interface State {
-    pager: IPager;
+    pagerModel: PagerModel;
     promises: Object[]
 }
 
@@ -14,7 +14,7 @@ interface State {
 export class Promises {
     api: PromisesApi;
     heading: string = 'Promises';
-    pager: IPager;
+    pagerModel: PagerModel;
 
     constructor(private http: HttpClient) {
         this.api = new PromisesApi(http);
@@ -22,47 +22,32 @@ export class Promises {
 
     activate(params, routeConfig) {
         const currentPage = parseInt(params.page, 10) || 1;
-        return navigate(this.api, 'promises', { page: currentPage })
-        .then(state => _.extend(this, state));
+        return navigate(this.api, null, this.navigateToPage.bind(this), { page: currentPage })
+        .then(state => _.extend(this, state))
     }
 
     navigateToPage(page: number) {
-        navigate(this.api, 'promises', { page: page })
+        navigate(this.api, null, this.navigateToPage.bind(this), { page: page })
         .then(state => _.extend(this, state));
         return true;
     }
 }
 
-function navigate(api: PromisesApi, stateName: string, queries: PromisesQuery) {
+function navigate(api: PromisesApi, getUrlFn: Function, navigateToPageFn: Function, queries: PromisesQuery) {
     queries = _.extend({
         page: 1
     }, queries || {});
     return api.fetch(queries)
-    .then(response => updateState(response, stateName));
-}
+        .then(response => updateState(response, getUrlFn, navigateToPageFn));
 
-function updateState(response: PromisesResponse, stateName: string) : State {
-    const currentPage = response.current_page;
-    const totalPages = response.total_pages;
-    const firstPage = Math.max(currentPage - 2, 1);
-    const lastPage = Math.min(currentPage + 2, totalPages);
-    let pages = [];
-    for (let i = firstPage; i <= lastPage; i++) {
-        pages.push(i);
+    function updateState(response: PromisesResponse, getUrlFn: Function, navigateToPageFn: Function) {
+        return {
+            promises: response.results,
+            pagerModel: new PagerModel(getUrlFn || getUrl, navigateToPageFn, response.current_page, response.total_pages, !!response.next_url, !!response.previous_url)
+        };
     }
-    return {
-        promises: response.results,
-        pager: {
-            currentPage,
-            hasNext: !!response.next_url,
-            hasPrevious: !!response.previous_url,
-            totalPages,
-            pages,
-            getUrl: getUrl
-        }
-    };
 }
 
 function getUrl(query: Object) : string {
-    return constructStateUrl('promises', query);
+    return constructLocalUrl('promises', query);
 }

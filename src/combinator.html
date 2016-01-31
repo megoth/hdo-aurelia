@@ -12,7 +12,11 @@
       </div>
       <div class="row">
         <div class="col-md-2 col-xs-2">Løfter filter</div>
-        <div class="col-md-4 col-xs-4">Løfter tabell</div>
+        <div class="col-md-4 col-xs-4">
+          <compose 
+            model.bind="promises.pager"
+            view-model="./widgets/pager"></compose>
+        </div>
         <div class="col-md-4 col-xs-4">Forslag tabell</div>
         <div class="col-md-2 col-xs-2">Forslag filter</div>
       </div>

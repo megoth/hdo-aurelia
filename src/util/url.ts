@@ -1,8 +1,8 @@
 import _ from 'lodash';
 
-export function constructStateUrl(stateName: string, query: Object) {
-  const flattenedQuery = flattenQuery(query);
-  return `#${stateName}?${flattenedQuery}`;
+export function constructLocalUrl(stateName: string, query: Object) {
+    const flattenedQuery = flattenQuery(query);
+    return `#/${stateName}?${flattenedQuery}`;
 }
 
 export function constructUrl(baseUrl: string, query: Object) {
@@ -12,7 +12,16 @@ export function constructUrl(baseUrl: string, query: Object) {
 
 export function flattenQuery(query: Object): string {
     return _.reduce(query || {}, (memo, value, key) => {
-        memo.push(`${key}=${value}`);
+        const encodedKey = encodeURI(key);
+        const encodedValue = processValue(value);
+        memo.push(`${encodedKey}=${encodedValue}`);
         return memo;
     }, []).join('&');
+
+    function processValue(value: any) {
+        return _.isPlainObject(value) ? (() => {
+            const query = flattenQuery(value);
+            return `{${query}}`;
+        })() : encodeURI(value);
+    }
 }
