@@ -1,11 +1,9 @@
 <template>
-  <require from="bootstrap/css/bootstrap.css"></require>
-  <require from="font-awesome/css/font-awesome.css"></require>
+  <require from="../hdo-bootstrap/public/hdo-bootstrap.css"></require>
   <require from='./nav-bar.html'></require>
 
-  <nav-bar router.bind="router"></nav-bar>
-
-  <div class="page-host">
+  <div class="container">
+    <nav-bar router.bind="router"></nav-bar>
     <router-view></router-view>
   </div>
 </template>
