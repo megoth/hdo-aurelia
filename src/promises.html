@@ -1,12 +1,11 @@
 <template>
   <section>
     <h2>${heading}</h2>
-    <compose 
-      model.bind="pagerModel"
-      view-model="./widgets/pager"></compose>
-    <compose
-      model.bind="searchModel"
-      view-model="./widgets/search"></compose>
+    <compose model.bind="pagerModel" view-model="./widgets/pager"></compose>
+    <compose model.bind="searchModel" view-model="./widgets/search"></compose>
+    <div repeat.for="facetModel of facetModels">
+      <compose model.bind="facetModel" view-model="./widgets/facet"></compose>
+    </div>
     <table class="table table-striped">
       <thead>
         <tr>

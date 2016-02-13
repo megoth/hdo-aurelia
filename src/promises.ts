@@ -2,6 +2,7 @@ import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import {PromisesApi, PromisesQuery, PromisesResponse} from './api/promises-api';
 import _ from 'lodash';
+import {FacetModel} from './models/facetModel';
 import {PagerModel} from './models/pagerModel';
 import {PromisesModel} from './models/promisesModel';
 import {SearchModel} from './models/searchModel';
@@ -12,6 +13,7 @@ export class Promises {
     api: PromisesApi;
     heading: string = 'Promises';
     pagerModel: PagerModel;
+    facetModels: FacetModel[];
     tableModel: PromisesModel;
     searchModel: SearchModel;
 
@@ -25,6 +27,10 @@ export class Promises {
     }
 
     // methods
+    createFacetModel(f) {
+        return new FacetModel(this.navigate.bind(this), f.param, f.terms, f.title);
+    }
+
     createPagerModel(r: PromisesResponse) {
         return new PagerModel(this.navigateToPage.bind(this), r.current_page, r.total_pages, !!r.next_url, !!r.previous_url);
     }
@@ -50,6 +56,9 @@ export class Promises {
 
     updateModels(response: PromisesResponse) {
         this.tableModel = new PromisesModel(response.results);
+        this.facetModels = response.navigators
+            .filter(nav => nav.type.facet)
+            .map(nav => this.createFacetModel(nav));
         this.pagerModel = this.createPagerModel(response);
         this.searchModel = this.createSearchModel(response.navigators[0])
     }
