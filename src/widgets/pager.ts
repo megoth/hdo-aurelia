@@ -6,4 +6,8 @@ export class Pager {
   activate(model) {
     this.model = model;
   }
+
+  navigate(page: Number) {
+    this.model.navigateToPage(page);
+  }
 }

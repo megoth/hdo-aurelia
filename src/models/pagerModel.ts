@@ -1,15 +1,13 @@
 export class PagerModel {
   currentPage: number;
-  getUrl: Function;
   hasNext: boolean;
   hasPrevious: boolean;
   navigateToPage: Function;
   pages: number[];
   totalPages: number;
 
-  constructor(getUrl: Function, navigateToPage: Function, currentPage: number, totalPages: number, hasNext: boolean, hasPrevious: boolean) {
+  constructor(navigateToPage: Function, currentPage: number, totalPages: number, hasNext: boolean, hasPrevious: boolean) {
     this.currentPage = currentPage;
-    this.getUrl = getUrl;
     this.hasNext = hasNext;
     this.hasPrevious = hasPrevious;
     this.navigateToPage = navigateToPage;

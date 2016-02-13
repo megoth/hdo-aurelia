@@ -1,0 +1,10 @@
+<template>
+  <form class="form-horizontal" submit.delegate="search()">
+    <div class="input-group">
+      <input class="form-control search-query" keyup.delegate="search() & throttle" name.bind="model.param" type="search" value.bind="query" />
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="submit" text.bind="model.title">Søk</button>
+      </span>
+    </div>
+  </form>
+</template>
