@@ -23,18 +23,18 @@ export class Propositions {
 
     activate(params, routeConfig) {
         const currentPage = parseInt(params.page, 10) || 1;
-        return navigate(this.api, null, this.navigateToPage.bind(this), { page: currentPage })
+        return navigatePropositions(this.api, null, this.navigateToPage.bind(this), { page: currentPage })
         .then(state => _.extend(this, state));
     }
 
     navigateToPage(page: number) : boolean {
-        navigate(this.api, null, this.navigateToPage.bind(this), { page: page })
+        navigatePropositions(this.api, null, this.navigateToPage.bind(this), { page: page })
         .then(state => _.extend(this, state));
         return true;
     }
 }
 
-function navigate(api: PropositionsApi, getUrlFn: Function, navigateToPageFn: Function, query: PropositionsQuery): Promise<State> {
+export function navigatePropositions(api: PropositionsApi, getUrlFn: Function, navigateToPageFn: Function, query: PropositionsQuery): Promise<State> {
     query = _.extend({
         page: 1
     }, query || {});

@@ -28,8 +28,23 @@
             </tbody>
           </table>
         </div>
-        <div class="col-md-4 col-xs-4">Forslag tabell</div>
-        <div class="col-md-2 col-xs-2">Forslag filter</div>
+        <div class="col-md-6 col-xs-6">
+          <compose 
+            model.bind="propositions.pagerModel"
+            view-model="./widgets/pager"></compose>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Auto-tittel</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr repeat.for="proposition of propositions.propositions">
+                <td>${proposition.auto_title}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </section>

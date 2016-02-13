@@ -22,19 +22,18 @@ export class Promises {
 
     activate(params, routeConfig) {
         const currentPage = parseInt(params.page, 10) || 1;
-        return navigate(this.api, null, this.navigateToPage.bind(this), { page: currentPage })
+        return navigatePromises(this.api, null, this.navigateToPage.bind(this), { page: currentPage })
         .then(state => _.extend(this, state))
     }
 
     navigateToPage(page: number) {
-        navigate(this.api, null, this.navigateToPage.bind(this), { page: page })
+        navigatePromises(this.api, null, this.navigateToPage.bind(this), { page: page })
         .then(state => _.extend(this, state));
         return true;
     }
 }
 
-export function navigate(api: PromisesApi, getUrlFn: Function, navigateToPageFn: Function, queries: PromisesQuery) {
-    console.log(api);
+export function navigatePromises(api: PromisesApi, getUrlFn: Function, navigateToPageFn: Function, queries: PromisesQuery) {
     queries = _.extend({
         page: 1
     }, queries || {});
