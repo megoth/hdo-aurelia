@@ -36,7 +36,7 @@ export class Promises {
     }
 
     createSearchModel(s) {
-        return new SearchModel(this.search.bind(this), s.param, s.query, s.title, s.value);
+        return new SearchModel(this.navigate.bind(this), s.param, s.query, s.title, s.value);
     }
 
     navigate(query: PromisesQuery) {
@@ -48,10 +48,6 @@ export class Promises {
 
     navigateToPage(page: number) {
         this.navigate({ page: page });
-    }
-
-    search(query: PromisesQuery) {
-        this.navigate(query);
     }
 
     updateModels(response: PromisesResponse) {

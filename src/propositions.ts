@@ -4,18 +4,18 @@ import {PropositionsApi, PropositionsQuery, PropositionsResponse} from './api/pr
 import {PagerModel} from './models/pagerModel';
 import _ from 'lodash';
 import {constructLocalUrl} from './util/url';
-
-interface State {
-    pagerModel: PagerModel;
-    propositions: Object[];
-}
+import {FacetModel} from './models/facetModel';
+import {SearchModel} from './models/searchModel';
+import {PropositionsModel} from './models/propositionsModel';
 
 @autoinject
 export class Propositions {
     api: PropositionsApi;
-    pagerModel: PagerModel;
     heading: string = 'Propositions';
-    propositions: Object[] = [];
+    pagerModel: PagerModel;
+    facetModels: FacetModel[];
+    tableModel: PropositionsModel;
+    searchModel: SearchModel;
 
     constructor(private http: HttpClient) {
         this.api = new PropositionsApi(http);
@@ -23,32 +23,39 @@ export class Propositions {
 
     activate(params, routeConfig) {
         const currentPage = parseInt(params.page, 10) || 1;
-        return navigatePropositions(this.api, null, this.navigateToPage.bind(this), { page: currentPage })
-        .then(state => _.extend(this, state));
+        return this.navigate({ page: currentPage });
     }
 
-    navigateToPage(page: number) : boolean {
-        navigatePropositions(this.api, null, this.navigateToPage.bind(this), { page: page })
-        .then(state => _.extend(this, state));
-        return true;
+    // methods
+    createFacetModel(f) {
+        return new FacetModel(this.navigate.bind(this), f.param, f.terms, f.title);
     }
-}
 
-export function navigatePropositions(api: PropositionsApi, getUrlFn: Function, navigateToPageFn: Function, query: PropositionsQuery): Promise<State> {
-    query = _.extend({
-        page: 1
-    }, query || {});
-    return api.fetch(query)
-        .then(response => updateState(response, getUrlFn, navigateToPageFn));
-
-    function updateState(response: PropositionsResponse, getUrlFn: Function, navigateToPageFn: Function): State {
-        return {
-            propositions: response.results,
-            pagerModel: new PagerModel(getUrlFn || getUrl, navigateToPageFn, response.current_page, response.total_pages, !!response.next_url, !!response.previous_url)
-        };
+    createPagerModel(r: PropositionsResponse) {
+        return new PagerModel(this.navigateToPage.bind(this), r.current_page, r.total_pages, !!r.next_url, !!r.previous_url);
     }
-}
 
-function getUrl(query: Object) {
-    return constructLocalUrl('propositions', query);
+    createSearchModel(s) {
+        return new SearchModel(this.navigate.bind(this), s.param, s.query, s.title, s.value);
+    }
+
+    navigate(query: PropositionsQuery) {
+        return this.api.fetch(_.extend({
+            page: 1
+        }, query || {}))
+            .then(response => this.updateModels(response));
+    }
+
+    navigateToPage(page: number) {
+        this.navigate({ page: page });
+    }
+
+    updateModels(response: PropositionsResponse) {
+        this.tableModel = new PropositionsModel(response.results);
+        this.facetModels = response.navigators
+            .filter(nav => nav.type.facet)
+            .map(nav => this.createFacetModel(nav));
+        this.pagerModel = this.createPagerModel(response);
+        this.searchModel = this.createSearchModel(response.navigators[0])
+    }
 }
