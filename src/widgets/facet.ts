@@ -2,17 +2,23 @@ import {FacetModel} from '../models/facetModel';
 
 export class Facet {
     model: FacetModel;
+    activeTerms: Object[];
+    inactiveTerms: Object[];
 
     activate(model) {
         this.model = model;
+        this.activeTerms = model.terms.filter(a => a.active);
+        this.inactiveTerms = model.terms.filter(a => !a.active); 
     }
 
     clear() {
-        this.model.navigate();
+        var query = { page: '' };
+        query[this.model.param] = '';
+        this.model.navigate(query);
     }
 
     select(termName) {
-        var query = {};
+        var query = { page: '' };
         query[this.model.param] = termName;
         this.model.navigate(query);
     }

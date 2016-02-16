@@ -1,7 +1,7 @@
 <template>
   <form class="form-horizontal" submit.delegate="search()">
     <div class="input-group">
-      <input class="form-control search-query" keyup.delegate="search() & debounce" name.bind="model.param" type="search" value.bind="query" />
+      <input class="form-control search-query" keyup.delegate="search() & debounce" name.bind="model.param" type="search" value.bind="model.value" />
       <span class="input-group-btn">
         <button class="btn btn-default" type="submit">${model.title}</button>
       </span>

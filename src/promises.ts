@@ -1,14 +1,16 @@
 import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
-import {PromisesApi, PromisesQuery, PromisesResponse} from './api/promises-api';
+import {Router} from 'aurelia-router';
 import _ from 'lodash';
+
+import {PromisesApi, PromisesQuery, PromisesResponse} from './api/promises-api';
 import {FacetModel} from './models/facetModel';
 import {PagerModel} from './models/pagerModel';
 import {PromisesModel} from './models/promisesModel';
 import {SearchModel} from './models/searchModel';
-import {constructLocalUrl} from './util/url';
+import {constructLocalUrl, parseQuery} from './util/url';
 
-@inject(HttpClient)
+@inject(HttpClient, Router)
 export class Promises {
     api: PromisesApi;
     heading: string = 'Promises';
@@ -16,14 +18,16 @@ export class Promises {
     facetModels: FacetModel[];
     tableModel: PromisesModel;
     searchModel: SearchModel;
+    query: PromisesQuery;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private router: Router) {
         this.api = new PromisesApi(http);
+        this.query = {};
     }
 
     activate(params, routeConfig) {
         const currentPage = parseInt(params.page, 10) || 1;
-        return this.navigate({ page: currentPage });
+        return this.navigate(params);
     }
 
     // methods
@@ -39,11 +43,20 @@ export class Promises {
         return new SearchModel(this.navigate.bind(this), s.param, s.query, s.title, s.value);
     }
 
-    navigate(query: PromisesQuery) {
-        return this.api.fetch(_.extend({
-            page: 1
-        }, query || {}))
-        .then(response => this.updateModels(response));
+    navigate(query: PromisesQuery = {}) {
+        _.assignIn(this.query, query);
+        _.reduce(this.query, (memo, value, key) => {
+            if (value === '') {
+                memo.push(key);
+            }
+            return memo;
+        }, [])
+            .forEach(key => {
+                delete this.query[key];
+            });
+        return this.api.fetch(this.query)
+            .then(response => this.updateModels(response))
+            .then(() => this.updateUrl());
     }
 
     navigateToPage(page: number) {
@@ -57,6 +70,10 @@ export class Promises {
             .map(nav => this.createFacetModel(nav));
         this.pagerModel = this.createPagerModel(response);
         this.searchModel = this.createSearchModel(response.navigators[0])
+    }
+
+    updateUrl() {
+        this.router.navigateToRoute('promises', this.query);
     }
 }
 

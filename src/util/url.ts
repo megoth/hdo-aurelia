@@ -10,7 +10,22 @@ export function constructUrl(baseUrl: string, query: Object) {
     return `${baseUrl}?${flattenedQuery}`;
 }
 
-export function flattenQuery(query: Object, separator: string = '=', keyDelimiter: string = ''): string {
+export function parseQuery(newQuery: Object, oldQuery: Object) {
+    var query = _.assignIn({}, oldQuery, newQuery);
+    _
+        .reduce(query, (memo, value, key) => {
+            if (value === '') {
+                memo.push(key);
+            }
+            return memo;
+        }, [])
+        .forEach(key => {
+            delete query[key];
+        });
+    return query;
+}
+
+function flattenQuery(query: Object, separator: string = '=', keyDelimiter: string = ''): string {
     return _.reduce(query || {}, (memo, value, key) => {
         const encodedKey = encodeURI(key);
         const encodedValue = processValue(value);
@@ -25,3 +40,4 @@ export function flattenQuery(query: Object, separator: string = '=', keyDelimite
         })() : encodeURI(value);
     }
 }
+export {flattenQuery};

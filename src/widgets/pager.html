@@ -2,27 +2,27 @@
   <nav>
     <ul class="pagination">
       <li class="page-item" if.bind="model.hasPrevious && model.currentPage !== 2">
-        <a class="page-link" click.trigger="navigate(1)" aria-label="First page">
+        <a aria-label="First page" class="page-link" click.trigger="navigate(1)" href>
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
       <li class="page-item" if.bind="model.hasPrevious">
-        <a class="page-link" click.trigger="navigate(model.currentPage-1)" aria-label="Previous">
+        <a aria-label="Previous" class="page-link" click.trigger="navigate(model.currentPage-1)" href>
           <span aria-hidden="true">&lsaquo;</span>
         </a>
       </li>
       <li class="page-item" repeat.for="page of model.pages" class.bind="model.currentPage === page ? 'active' : ''">
-        <a class="page-link" click.trigger="navigate(page)" aria-label="Page ${page}">
+        <a aria-label="Page ${page}" class="page-link" click.trigger="navigate(page)" href>
           <span aria-hidden="true">${page}</span>
         </a>
       </li>
       <li class="page-item" if.bind="model.hasNext">
-        <a class="page-link" click.trigger="navigate(model.currentPage+1)" aria-label="Next">
+        <a aria-label="Next" class="page-link" click.trigger="navigate(model.currentPage+1)" href>
           <span aria-hidden="true">&rsaquo;</span>
         </a>
       </li>
       <li class="page-item" if.bind="model.hasNext && model.currentPage !== model.totalPages - 1">
-        <a class="page-link" click.trigger="navigate(model.totalPages)" aria-label="Last page">
+        <a aria-label="Last page" class="page-link" click.trigger="navigate(model.totalPages)" href>
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>

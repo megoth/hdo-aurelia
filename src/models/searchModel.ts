@@ -10,6 +10,6 @@ export class SearchModel {
         this.query = query;
         this.searchFn = searchFn;
         this.title = title;
-        this.value = value;
+        this.value = value || '';
     }
 }

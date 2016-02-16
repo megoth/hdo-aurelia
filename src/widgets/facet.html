@@ -1,11 +1,16 @@
 <template>
   <h3>${model.title}</h3>
   <ul>
-    <li repeat.for="term of model.terms">
-      <a click.delegate="select(term.name)">${term.name} (${term.count})</a>
-      <span if.bind="term.active">
-        (<a click.delegate="clear()">X</a>)
+    <li repeat.for="term of activeTerms">
+      ${term.name}
+      <span>
+        (<a click.delegate="clear()" href>X</a>)
       </span>
+    </li>
+  </ul>
+  <ul>
+    <li repeat.for="term of inactiveTerms">
+      <a click.delegate="select(term.name)" href>${term.name} (${term.count})</a>
     </li>
   </ul>
 </template>
