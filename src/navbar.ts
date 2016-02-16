@@ -9,6 +9,11 @@ export class Navbar {
     }
 
     navigate(route) {
-        return !route.isActive;
+        // if (route.isActive) {
+        //     location.hash = constructLocalUrl(route.relativeHref, route.config.query);
+        //     // location.reload();
+        //     return false;
+        // }
+        return true;
     }
 }

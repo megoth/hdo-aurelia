@@ -26,7 +26,12 @@ export class Promises {
     }
 
     activate(params, routeConfig) {
+        console.log('test');
         return this.navigate(params);
+    }
+
+    reactivate() {
+        console.log('reactivating');
     }
 
     // methods
