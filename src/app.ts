@@ -32,7 +32,9 @@ export class App {
         name: 'promises', 
         moduleId: './src/promises', 
         nav: true, 
-        title: 'Promises' 
+        title: 'Promises',
+        query: { page: 1 },
+        replace: true
       },
     ]);
 

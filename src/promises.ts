@@ -22,11 +22,10 @@ export class Promises {
 
     constructor(private http: HttpClient, private router: Router) {
         this.api = new PromisesApi(http);
-        this.query = {};
+        this.query = { page: 1 };
     }
 
     activate(params, routeConfig) {
-        const currentPage = parseInt(params.page, 10) || 1;
         return this.navigate(params);
     }
 

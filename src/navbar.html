@@ -1,8 +1,8 @@
-<template bindable="router">
+<template>
   <nav class="navbar navbar-light bg-faded">
     <ul class="nav navbar-nav">
-      <li repeat.for="row of router.navigation" class="nav-item ${row.isActive ? 'active' : ''}">
-        <a class="nav-link" href.bind="row.href">${row.title}</a>
+      <li repeat.for="route of router.navigation" class="nav-item ${route.isActive ? 'active' : ''}">
+        <a class="nav-link" click.delegate="navigate(route)" href.bind="route.href">${route.title}</a>
       </li>
     </ul>
     <!-- <ul class="nav navbar-nav navbar-right">

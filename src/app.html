@@ -1,9 +1,8 @@
 <template>
   <require from="../hdo-bootstrap/public/hdo-bootstrap.css"></require>
-  <require from='./nav-bar.html'></require>
 
   <div class="container">
-    <nav-bar router.bind="router"></nav-bar>
+    <compose view-model="./navbar"></compose>
     <router-view></router-view>
   </div>
 </template>

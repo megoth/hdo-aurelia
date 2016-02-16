@@ -12,13 +12,13 @@ export class Facet {
     }
 
     clear() {
-        var query = { page: '' };
+        var query = { page: 1 };
         query[this.model.param] = '';
         this.model.navigate(query);
     }
 
     select(termName) {
-        var query = { page: '' };
+        var query = { page: 1 };
         query[this.model.param] = termName;
         this.model.navigate(query);
     }
