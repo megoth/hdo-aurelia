@@ -10,6 +10,6 @@ export class Search {
     search() {
         var query = { page: 1 };
         query[this.model.param] = this.model.value;
-        this.model.searchFn(query);
+        this.model.search(query);
     }
 }

@@ -4,8 +4,7 @@ export class FacetModel {
     terms: Object[];
     title: string;
 
-    constructor(navigate: Function, param: string, terms: Object[], title: string) {
-        this.navigate = navigate;
+    constructor(param: string, terms: Object[], title: string) {
         this.param = param;
         this.terms = terms;
         this.title = title;

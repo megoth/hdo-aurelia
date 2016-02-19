@@ -12,21 +12,10 @@
       </div>
       <div class="row">
         <div class="col-md-6 col-xs-6">
-          <compose 
-            model.bind="promises.pagerModel"
-            view-model="./widgets/pager"></compose>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Body</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr repeat.for="promise of promises.promises">
-                <td>${promise.body}</td>
-              </tr>
-            </tbody>
-          </table>
+          <compose model.bind="promises.searchModel" view-model="./widgets/search"></compose>
+          <compose model.bind="promises.pagerModel" view-model="./widgets/pager"></compose>
+          <compose model.bind="promises.tableModel" view-model="./widgets/promisesTable"></compose>
+          <compose model.bind="promises.pagerModel" view-model="./widgets/pager"></compose>
         </div>
         <div class="col-md-6 col-xs-6">
           <compose 

@@ -8,6 +8,6 @@ export class Pager {
   }
 
   navigate(page: Number) {
-    this.model.navigateToPage(page);
+    this.model.navigate({page});
   }
 }

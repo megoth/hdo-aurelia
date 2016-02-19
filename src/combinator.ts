@@ -1,34 +1,31 @@
-import {autoinject} from 'aurelia-framework';
+import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client'; 
+import {Router} from 'aurelia-router';
 import _ from 'lodash';
 
-import {PromisesApi, PromisesQuery} from './api/promises-api';
-import {PropositionsApi, PropositionsQuery} from './api/propositions-api';
-import {PromisesModel} from './models/promisesModel';
-import {PropositionsModel} from './models/propositionsModel';
+import {Promises} from './promises';
+import {PromisesQuery} from './api/promises-api';
+import {Propositions} from './propositions';
+import {PropositionsQuery} from './api/propositions-api';
+import {constructLocalUrl, parseQuery} from './util/url';
 
-@autoinject
+@inject(HttpClient, Router)
 export class Combinator {
     heading: string = 'Kombinér Løfter og Forslag';
-    promisesApi: PromisesApi;
-    propositionsApi: PropositionsApi;
-    combinatorQuery: {
+    query: {
         promises: PromisesQuery,
         propositions: PropositionsQuery
     };
-    promises: {
-        tableModel: PromisesModel
-    };
-    propositions: {
-        tabelModel: PropositionsModel
-    }
+    promises: Promises;
+    propositions: Propositions
 
-    constructor(private http: HttpClient) {
-        this.promisesApi = new PromisesApi(http);
-        this.propositionsApi = new PropositionsApi(http);
-        this.combinatorQuery = { promises: {}, propositions: {} };
+    constructor(private http: HttpClient, private router: Router) {
+        this.promises = new Promises(http, router);
+        this.propositions = new Propositions(http, router);
+        this.query = { promises: { page: 1 }, propositions: { page: 1 } };
     }
 
     activate(params, routeConfig) {
+        this.promises.fetch().then(() => console.log(this.promises));
     }
 }

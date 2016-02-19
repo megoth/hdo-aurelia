@@ -1,0 +1,14 @@
+<template>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Body</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr repeat.for="promise of model.promises">
+        <td>${promise.body}</td>
+      </tr>
+    </tbody>
+  </table>
+</template>

@@ -26,45 +26,36 @@ export class Promises {
     }
 
     activate(params, routeConfig) {
-        console.log('test');
         return this.navigate(params);
-    }
-
-    reactivate() {
-        console.log('reactivating');
     }
 
     // methods
     createFacetModel(f) {
-        return new FacetModel(this.navigate.bind(this), f.param, f.terms, f.title);
+        return new FacetModel(f.param, f.terms, f.title);
     }
 
     createPagerModel(r: PromisesResponse) {
-        return new PagerModel(this.navigateToPage.bind(this), r.current_page, r.total_pages, !!r.next_url, !!r.previous_url);
+        return new PagerModel(r.current_page, r.total_pages, !!r.next_url, !!r.previous_url);
     }
 
     createSearchModel(s) {
-        return new SearchModel(this.navigate.bind(this), s.param, s.query, s.title, s.value);
+        return new SearchModel(s.param, s.query, s.title, s.value);
+    }
+
+    fetch(query: PromisesQuery = {}) {
+        this.query = parseQuery(query, this.query);
+        return this.api.fetch(this.query)
+            .then(response => this.updateModels(response));        
     }
 
     navigate(query: PromisesQuery = {}) {
-        _.assignIn(this.query, query);
-        _.reduce(this.query, (memo, value, key) => {
-            if (value === '') {
-                memo.push(key);
-            }
-            return memo;
-        }, [])
-            .forEach(key => {
-                delete this.query[key];
-            });
-        return this.api.fetch(this.query)
-            .then(response => this.updateModels(response))
+        return this.fetch(query)
+            .then(() => {
+                this.pagerModel.navigate = this.navigate.bind(this);
+                this.facetModels.forEach(facetModel => facetModel.navigate = this.navigate.bind(this));
+                this.searchModel.search = this.navigate.bind(this);
+            })
             .then(() => this.updateUrl());
-    }
-
-    navigateToPage(page: number) {
-        this.navigate({ page: page });
     }
 
     updateModels(response: PromisesResponse) {
@@ -80,28 +71,3 @@ export class Promises {
         this.router.navigateToRoute('promises', this.query);
     }
 }
-
-// function navigatePromises(api: PromisesApi, getUrlFn: Function, navigateToPageFn: Function, queries: PromisesQuery) {
-//     queries = _.extend({
-//         page: 1
-//     }, queries || {});
-//     return api.fetch(queries)
-//         .then(response => updateState(response, getUrlFn, navigateToPageFn));
-// }
-// export { navigatePromises };
-
-// function updateState(response: PromisesResponse, getUrlFn: Function, navigateToPageFn: Function) {
-//     return {
-//         promises: response.results,
-//         pagerModel: new PagerModel(getUrlFn || getUrl, navigateToPageFn, response.current_page, response.total_pages, !!response.next_url, !!response.previous_url),
-//         searchModel: createSearchModel(response.navigators[0])
-//     };
-// }
-
-// function search(query: Object) {
-
-// }
-
-// function getUrl(query: Object) : string {
-//     return constructLocalUrl('promises', query);
-// }
