@@ -1,0 +1,20 @@
+@import '../hdo-bootstrap/public/hdo-bootstrap.css';
+
+$hdo-steel-blue-extra-dark: #455068;
+
+$spacer: 1em !default;
+$border-width: 1px !default;
+
+.droppable {
+    display: none;
+}
+
+.drag-and-drop {
+    .droppable {
+        border: dashed $border-width $hdo-steel-blue-extra-dark;
+        display: block;
+        height: 3em;
+        margin: $spacer / 2 0;
+        padding: $spacer / 2;
+    }
+}
