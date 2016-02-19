@@ -7,7 +7,7 @@ import {Promises} from './promises';
 import {PromisesQuery} from './api/promises-api';
 import {Propositions} from './propositions';
 import {PropositionsQuery} from './api/propositions-api';
-import {constructLocalUrl, parseQuery} from './util/url';
+import {encodeQueryAsObject} from './util/url';
 
 @inject(HttpClient, Router)
 export class Combinator {
@@ -26,6 +26,42 @@ export class Combinator {
     }
 
     activate(params, routeConfig) {
-        this.promises.fetch().then(() => console.log(this.promises));
+        return this.navigate(
+            params.promises ? JSON.parse(params.promises) : {}, 
+            params.propositions ? JSON.parse(params.propositions) : {}
+        );
+    }
+
+    navigate(promisesQuery: PromisesQuery, propositionsQuery: PropositionsQuery) {
+        this.query = {
+            promises: _.extend(this.query.promises, promisesQuery),
+            propositions: _.extend(this.query.propositions, propositionsQuery)
+        };
+        return Promise.all([
+            this.promises.fetch(this.query.promises)
+                .then(() => {
+                    this.promises.pagerModel.navigate = this.navigatePromises.bind(this);
+                    this.promises.facetModels.forEach(facetModel => facetModel.navigate = this.navigatePromises.bind(this));
+                    this.promises.searchModel.search = this.navigatePromises.bind(this);
+                }),
+            this.propositions.fetch(this.query.propositions)
+                .then(() => {
+                    this.propositions.pagerModel.navigate = this.navigatePropositions.bind(this);
+                    this.propositions.facetModels.forEach(facetModel => facetModel.navigate = this.navigatePropositions.bind(this));
+                    this.propositions.searchModel.search = this.navigatePropositions.bind(this);
+                })
+        ]).then(() => this.updateUrl());
+    }
+
+    navigatePromises(query: PromisesQuery) {
+        return this.navigate(query, {});
+    }
+
+    navigatePropositions(query: PropositionsQuery) {
+        return this.navigate({}, query);
+    }
+
+    updateUrl() {
+        this.router.navigateToRoute('combinator', encodeQueryAsObject(this.query));
     }
 }

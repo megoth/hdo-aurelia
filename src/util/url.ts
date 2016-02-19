@@ -10,7 +10,7 @@ export function constructUrl(baseUrl: string, query: Object) {
     return `${baseUrl}?${flattenedQuery}`;
 }
 
-function encodeQuery(query: Object, separator: string = '=', keyDelimiter: string = ''): string {
+export function encodeQuery(query: Object, separator: string = '=', keyDelimiter: string = ''): string {
     return _.reduce(query || {}, (memo, value, key) => {
         const encodedKey = encodeURI(key);
         const encodedValue = processValue(value);
@@ -25,7 +25,19 @@ function encodeQuery(query: Object, separator: string = '=', keyDelimiter: strin
         })() : encodeURI(value);
     }
 }
-export {encodeQuery};
+
+export function encodeQueryAsObject(query: Object) : Object {
+    return _.reduce(query || {}, (memo, value, key) => {
+        const encodedKey = encodeURI(key);
+        const encodedValue = processValue(value);
+        memo[encodedKey] = encodedValue;
+        return memo;
+    }, {});
+
+    function processValue(value: any) {
+        return _.isPlainObject(value) ? JSON.stringify(value) : encodeURI(value);
+    }
+}
 
 export function flattenQuery(query: Object) {
     return _.reduce(query, (memo, a, b) => {

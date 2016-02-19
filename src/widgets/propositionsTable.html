@@ -1,0 +1,14 @@
+<template>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Auto-tittel</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr repeat.for="proposition of model.propositions">
+        <td>${proposition.auto_title}</td>
+      </tr>
+    </tbody>
+  </table>
+</template>
