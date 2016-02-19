@@ -14,13 +14,13 @@
         <div class="col-md-6 col-xs-6">
           <compose model.bind="promises.searchModel" view-model="./widgets/search"></compose>
           <compose model.bind="promises.pagerModel" view-model="./widgets/pager"></compose>
-          <compose model.bind="promises.tableModel" view-model="./widgets/promisesTable"></compose>
+          <compose class="drag-and-drop" model.bind="promises.tableModel" view-model="./widgets/promisesTable"></compose>
           <compose model.bind="promises.pagerModel" view-model="./widgets/pager"></compose>
         </div>
         <div class="col-md-6 col-xs-6">
           <compose model.bind="propositions.searchModel" view-model="./widgets/search"></compose>
           <compose model.bind="propositions.pagerModel" view-model="./widgets/pager"></compose>
-          <compose model.bind="propositions.tableModel" view-model="./widgets/propositionsTable"></compose>
+          <compose class="drag-and-drop" model.bind="propositions.tableModel" view-model="./widgets/propositionsTable"></compose>
           <compose model.bind="promises.pagerModel" view-model="./widgets/pager"></compose>
         </div>
       </div>
